@@ -1,1 +1,1 @@
-var CONTEXT = "/perudo";
+var CONTEXT = "/dudofordummies";

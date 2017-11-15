@@ -1,9 +1,12 @@
 package com.perudo.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserDeviceDto extends GenericDto {
 
 	private int userId;
-	private String deviceId;
+	private List<String> deviceIds;
 	
 	public int getUserId() {
 		return userId;
@@ -11,14 +14,13 @@ public class UserDeviceDto extends GenericDto {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public String getDeviceId() {
-		return deviceId;
+	public List<String> getDeviceIds() {
+		if(this.deviceIds == null) {
+			this.deviceIds = new ArrayList<String>();
+		}
+		return deviceIds;
 	}
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+	public void setDeviceIds(List<String> deviceIds) {
+		this.deviceIds = deviceIds;
 	}
-	
-
-	
-	
 }

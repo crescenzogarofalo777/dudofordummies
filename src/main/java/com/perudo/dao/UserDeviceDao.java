@@ -30,13 +30,14 @@ public class UserDeviceDao extends GenericDao<UserDeviceDto> {
 		ResultSet rs = this.findByCriteriaInternal(params);
 		List<UserDeviceDto> resultList = new ArrayList<UserDeviceDto>();
 		
-		if(rs != null) {
+		if(rs != null && rs.next()) {
+			UserDeviceDto bean = new UserDeviceDto();
+			bean.setUserId(rs.getInt(1));
+			bean.getDeviceIds().add(rs.getString(2));				
 			while(rs.next()) {
-				UserDeviceDto bean = new UserDeviceDto();
-				bean.setUserId(rs.getInt(1));
-				bean.setDeviceId(rs.getString(2));				
-				resultList.add(bean);
+				bean.getDeviceIds().add(rs.getString(2));
 			}
+			resultList.add(bean);
 		}
 		return resultList;
 	}
@@ -48,11 +49,11 @@ public class UserDeviceDao extends GenericDao<UserDeviceDto> {
 		StringBuilder userDeviceInsertQuery = new StringBuilder(Constants.USER_X_DEVICE_INSERT);
 		userDeviceInsertQuery.append(" (?,?)");
 		if(conn == null) {
-			System.out.println("BE CAREFUL  CONNECTION OBJECT IS NULL!!!!!!!!!!!!!!!1");
+			System.out.println("BE CAREFUL CONNECTION OBJECT IS NULL!!!!!!!!!!!!!!!1");
 		}
 		PreparedStatement pstm = conn.prepareStatement(userDeviceInsertQuery.toString());
 		pstm.setInt(1, userDeviceDto.getUserId());
-		pstm.setString(2, userDeviceDto.getDeviceId());
+		pstm.setString(2, userDeviceDto.getDeviceIds().get(0));
 
 		int numUserIns = pstm.executeUpdate();
 		DataSource.returnConnection(conn);

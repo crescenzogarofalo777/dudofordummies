@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -174,25 +175,28 @@ public class PerudoRest {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String insertUserDevice(@QueryParam("userName") String userName,@QueryParam("deviceId") String deviceId) {
 		StringBuilder res = new StringBuilder();
-		res.append("{\"userDeviceInserted\":{");
+		res.append("{\"deviceBound\":");
 		PerudoUserService perudoUserService = new PerudoUserService();
 		try {
 			UserDto userDto = perudoUserService.retrieveUser(userName);
 			if(userDto != null) {
+				String deviceIdEncoded = new String(Base64.encodeBase64String(deviceId.getBytes()));
 				UserDeviceDto userDeviceDto = new UserDeviceDto();
 				userDeviceDto.setUserId(userDto.getId());
-				userDeviceDto.setDeviceId(deviceId);
+				userDeviceDto.getDeviceIds().add(deviceIdEncoded);
 				PerudoUserDeviceService perudoUserDeviceService = new PerudoUserDeviceService();
 				UserDeviceDto userDeviceDtoResult = perudoUserDeviceService.insertUserDevice(userDeviceDto);
-				if(userDeviceDtoResult != null) {
-					res.append("\"userId\":\"").append(userDeviceDtoResult.getUserId()).append("\",");
-					res.append("\"deviceId\":\"").append(userDeviceDtoResult.getDeviceId()).append("\"");
-				}			
+				if(userDeviceDtoResult != null && !userDeviceDtoResult.getDeviceIds().isEmpty()) {
+					res.append("\":OK\"");
+				} else {
+					res.append("\":KO\"");
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			res.append("\":KO\"");
 		}
-		res.append("}}");
+		res.append("}");
 		return res.toString();
 	}
 
@@ -202,18 +206,23 @@ public class PerudoRest {
 	public String userDeviceAssociated(@QueryParam("userName") String userName,@QueryParam("deviceId") String deviceId) {
 		StringBuilder res = new StringBuilder("");
 		PerudoUserDeviceService perudoUserDeviceService = new PerudoUserDeviceService();
-		res.append("{\"userDeviceAssociated\": {");
+		res.append("{\"deviceBound\":");
 		try {
-			UserDeviceDto userDeviceDtoResult = perudoUserDeviceService.verifyDeviceUserAssociated(userName, deviceId);
+			String deviceIdEncoded = new String(Base64.encodeBase64String(deviceId.getBytes()));
+			
+			UserDeviceDto userDeviceDtoResult = perudoUserDeviceService.verifyDeviceUserAssociated(userName, deviceIdEncoded);
 			if(userDeviceDtoResult != null) {
-				res.append("\"userId\":\"").append(userDeviceDtoResult.getUserId()).append("\",");
-				res.append("\"deviceId\":\"").append(userDeviceDtoResult.getDeviceId()).append("\"");				
+				if(!userDeviceDtoResult.getDeviceIds().isEmpty()) {
+					res.append("\":OK\"");
+				} else {
+					res.append("\":KO\"");
+				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			res.append("\":KO\"");
 		}
-		res.append("}}");
+		res.append("}");
 		return res.toString();
 	}
 
