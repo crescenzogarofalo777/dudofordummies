@@ -9,7 +9,7 @@
   <repositories>
   	<repository>
   		<id>postgres_repo</id>
-  		<url>http://central.maven.org/maven2/</url>
+  		<url>https://mvnrepository.com/</url>
   	</repository>
   </repositories>
   <properties>
