@@ -6,6 +6,12 @@
   <packaging>war</packaging>
   <version>1.0</version>
   <name>dudofordummies</name>
+  <repositories>
+  	<repository>
+  		<id>postgres_repo</id>
+  		<url>http://central.maven.org/maven2/</url>
+  	</repository>
+  </repositories>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.6</maven.compiler.source>
