@@ -9,7 +9,7 @@
   <repositories>
   	<repository>
   		<id>postgres_repo</id>
-  		<url>https://mvnrepository.com/</url>
+  		<url>https://mvnrepository.com/artifact/postgresql/postgresql/</url>
   	</repository>
   </repositories>
   <properties>
